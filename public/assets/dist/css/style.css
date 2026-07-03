@@ -852,7 +852,7 @@ nav,
     border-radius: 6px !important;
 }
 .footer-bottom-watermark2 {
-        font-size: 75px;
+        font-size: 85px;
     }
 }
 
@@ -941,6 +941,9 @@ nav,
 }
     footer {
         padding: 15px 15px 10px;
+    }
+    .footer-bottom-watermark2{
+        font-size: 75px;
     }
 }
 
