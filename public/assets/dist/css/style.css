@@ -341,13 +341,16 @@ nav,
         left: 50%;
         transform: translateX(-50%);
     }
+    /* Keep navbar booking button on the right for desktop */
     .global-nav-menu {
         display: flex;
         align-items: center;
         gap: 20px;
-        width: 90%;
+        width: auto;
+        margin-left: auto;
     }
 }
+
 .hero-tag {
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(15px);
@@ -852,7 +855,7 @@ nav,
     border-radius: 6px !important;
 }
 .footer-bottom-watermark2 {
-        font-size: 75px;
+        font-size: 85px;
     }
 }
 
@@ -933,6 +936,12 @@ nav,
     position: relative;
     overflow: unset;
 }
+.global-nav-brand img {
+    height: 45px !important;
+}
+.navbar-toggler{
+    margin-right: 10px !important;
+}
 .hero-massive-card::before,.hero-massive-card{
  border-radius: 15px !important;
 }
@@ -941,6 +950,9 @@ nav,
 }
     footer {
         padding: 15px 15px 10px;
+    }
+    .footer-bottom-watermark2{
+        font-size: 75px;
     }
 }
 
