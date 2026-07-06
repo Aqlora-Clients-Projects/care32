@@ -212,19 +212,147 @@
 </div>
 
 <script>
-    // Simple static display without animation
+    // Responsive sequential stepper animation manager
     (function() {
         const items = document.querySelectorAll(".step-item");
         const lines = document.querySelectorAll(".step-line");
         
-        // Add active class to all items to keep styling
-        items.forEach(item => {
-            item.classList.add("active");
-        });
+        let activeTimeouts = [];
+        let isAnimating = null;
+        let currentIndex = 0;
         
-        // Add filled class to all lines to keep styling
-        lines.forEach(line => {
-            line.classList.add("filled");
+        // Timing Configuration (in milliseconds)
+        const buttonFillDuration = 2000; // Matches CSS transition duration for buttons
+        const waitAfterButton = 1500;    // Pause before the line starts filling
+        const lineFillDuration = 2000;   // Matches CSS transition duration for lines
+        const waitAfterLine = 500;       // Pause after line finishes, before next button starts
+        const cyclePause = 8000;         // Time to display fully filled stepper before restart
+        
+        function clearAllTimeouts() {
+            activeTimeouts.forEach(t => clearTimeout(t));
+            activeTimeouts = [];
+        }
+        
+        function setStaticState() {
+            clearAllTimeouts();
+            // Ensure no transitions interfere with active states
+            items.forEach(item => {
+                item.classList.remove("no-transition");
+                item.classList.add("active");
+            });
+            lines.forEach(line => {
+                line.classList.remove("no-transition");
+                line.classList.add("filled");
+            });
+        }
+        
+        function resetStepper() {
+            // Add no-transition to make reset instantaneous
+            items.forEach(item => {
+                item.classList.add("no-transition");
+                item.classList.remove("active");
+            });
+            lines.forEach(line => {
+                line.classList.add("no-transition");
+                line.classList.remove("filled");
+            });
+            
+            // Small layout trigger delay to allow classes to apply instantly
+            const tReset = setTimeout(() => {
+                items.forEach(item => item.classList.remove("no-transition"));
+                lines.forEach(line => line.classList.remove("no-transition"));
+                
+                currentIndex = 0;
+                animateStepper();
+            }, 50);
+            activeTimeouts.push(tReset);
+        }
+        
+        function animateStepper() {
+            if (!isAnimating) return;
+            
+            if (currentIndex >= items.length) {
+                // All steps completed. Pause, then restart.
+                const tCycle = setTimeout(() => {
+                    resetStepper();
+                }, cyclePause);
+                activeTimeouts.push(tCycle);
+                return;
+            }
+            
+            // Activate the current item
+            if (items[currentIndex]) {
+                items[currentIndex].classList.add("active");
+            }
+            
+            if (currentIndex < lines.length) {
+                // Wait for button fill + wait time, then fill the connecting line
+                const tLineStart = setTimeout(() => {
+                    if (lines[currentIndex]) {
+                        lines[currentIndex].classList.add("filled");
+                    }
+                    
+                    // Wait for line fill + wait time, then proceed to the next step
+                    const tNextStep = setTimeout(() => {
+                        currentIndex++;
+                        animateStepper();
+                    }, lineFillDuration + waitAfterLine);
+                    activeTimeouts.push(tNextStep);
+                    
+                }, buttonFillDuration + waitAfterButton);
+                activeTimeouts.push(tLineStart);
+            } else {
+                // Last button (no next line). Just wait for it to fill, then complete cycle.
+                const tLastButton = setTimeout(() => {
+                    currentIndex++;
+                    animateStepper();
+                }, buttonFillDuration);
+                activeTimeouts.push(tLastButton);
+            }
+        }
+        
+        function handleResize() {
+            const width = window.innerWidth;
+            const shouldAnimate = width >= 992 && width <= 1920;
+            
+            if (shouldAnimate) {
+                if (isAnimating !== true) {
+                    isAnimating = true;
+                    clearAllTimeouts();
+                    
+                    // Clean reset to starting state before animating
+                    items.forEach(item => {
+                        item.classList.add("no-transition");
+                        item.classList.remove("active");
+                    });
+                    lines.forEach(line => {
+                        line.classList.add("no-transition");
+                        line.classList.remove("filled");
+                    });
+                    
+                    setTimeout(() => {
+                        items.forEach(item => item.classList.remove("no-transition"));
+                        lines.forEach(line => line.classList.remove("no-transition"));
+                        currentIndex = 0;
+                        animateStepper();
+                    }, 50);
+                }
+            } else {
+                if (isAnimating !== false) {
+                    isAnimating = false;
+                    setStaticState();
+                }
+            }
+        }
+        
+        // Initial check
+        handleResize();
+        
+        // Listen for window resizing with debouncing for optimization
+        let resizeTimer;
+        window.addEventListener("resize", () => {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(handleResize, 150);
         });
     })();
 </script>
@@ -284,7 +412,7 @@
                 </p>
             </div>
             <div class="services-header-right d-none d-md-block">
-<a href="<?= base_url('contact') ?>" class="btn btn-primary px-4 py-2 medilink-btn" style="border-radius: 50px; font-weight: 700; background-color: #5c67f2; border: none;"> 
+               <a href="<?= base_url('contact') ?>" class="btn background-[ff5f1f] text-[white] px-4 py-2 medilink-btn" style="border-radius: 50px; font-weight: 700; background-color: #ff5f1f; color:white; border: none;"> 
                     <span class="d-inline-flex align-items-center gap-2">Book an Appointment <i class="fa-solid fa-tooth" aria-hidden="true"></i></span>
                 </a>
             </div>

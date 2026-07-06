@@ -95,9 +95,22 @@ new MorphedMenu({
     backdrop-filter: blur(10px);
     padding: 5px;
     border-radius: 50px;
+    transition: all 0.3s ease;
 }
 .global-nav-wrapper.navbar-home .global-nav-links {
     background: rgba(255, 255, 255, 0.15); /* Translucent white pill for home */
+}
+.global-nav-wrapper.navbar-home.scrolled-nav .global-nav-links {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid rgba(255, 255, 255, 1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(15px);
+}
+.global-nav-wrapper.navbar-home.scrolled-nav .global-nav-links a:not(.active) {
+    color: #444;
+}
+.global-nav-wrapper.navbar-home.scrolled-nav .global-nav-links a:hover:not(.active) {
+    background: rgba(0, 0, 0, 0.05);
 }
 
 @media (min-width: 992px) {
@@ -268,4 +281,30 @@ new MorphedMenu({
             icon.classList.add('fa-bars');
         }
     });
+
+    // Dynamic scroll handler for Home Page navbar
+    (function() {
+        const nav = document.getElementById('mainNavWrapper');
+        if (!nav) return;
+        
+        // Check if navbar-home is initially present to verify if this is the Home Page
+        const isHomePage = nav.classList.contains('navbar-home') || nav.classList.contains('scrolled-nav');
+        if (!isHomePage) return;
+        
+        function handleScroll() {
+            // 100vh is window.innerHeight
+            const threshold = window.innerHeight;
+            if (window.scrollY >= threshold) {
+                nav.classList.add('scrolled-nav');
+            } else {
+                nav.classList.remove('scrolled-nav');
+            }
+        }
+        
+        // Initial run to set correct state
+        handleScroll();
+        
+        // Add scroll listener
+        window.addEventListener('scroll', handleScroll);
+    })();
 </script>

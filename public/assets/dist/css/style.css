@@ -243,9 +243,9 @@ nav,
 
 /* HERO specific colors but uses shared dimensions */
 .hero-cta {
-    background: white;
-    color: black;
-    padding: 0;
+    background: var(--orange);
+    color: white;
+    padding: 7px 7px 7px 25px;
     border-radius: 50px;
     text-decoration: none;
     font-weight: 700;
@@ -255,10 +255,11 @@ nav,
     gap: 15px;
     transition: all 0.3s;
     height: 52px;
+    box-shadow: 0 4px 15px rgba(255, 95, 31, 0.2);
 }
 .hero-cta i {
-    background: var(--ui-blue);
-    color: white;
+    background: white;
+    color: var(--orange);
     width: 38px;
     height: 38px;
     display: flex;
@@ -270,12 +271,13 @@ nav,
 }
 
 .hero-cta:hover {
-    background-color: var(--orange);
-    color: white;
+    background-color: white;
+    color: var(--orange);
+    box-shadow: 0 4px 20px rgba(255, 95, 31, 0.4);
 }
 .hero-cta:hover i {
-    background: white;
-    color: var(--orange);
+    background: var(--orange);
+    color: white;
 }
 /* FLOATING MINI CARD */
 .hero-mini-card {
@@ -389,23 +391,50 @@ nav,
     gap: 10px;
 }
 
-/* Make stepper behave like 2-column buttons row */
+/* Make stepper behave like 2-column buttons row on tablet/mobile, and a single horizontal row on desktop */
 .services-scroll {
     flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
 }
 
-/* Each button half width; lines will take remaining space */
 .services-scroll .scroll-item {
-    flex: 0 0 calc(50% - 5px);
+    flex: 0 0 calc(50% - 10px);
 }
 
 .services-scroll .scroll-line {
-    flex: 1 1 100%;
+    display: none; /* Hide lines on tablet/mobile where layout wraps */
 }
 
 @media (max-width: 767px) {
     .services-scroll .scroll-item {
         flex: 0 0 100%;
+    }
+}
+
+@media (min-width: 992px) {
+    .services-scroll {
+        flex-wrap: nowrap;
+        justify-content: space-between;
+        gap: 10px;
+    }
+    
+    .services-scroll .scroll-item {
+        flex: 0 0 auto;
+    }
+    
+    .services-scroll .scroll-line {
+        display: block;
+        flex: 1 1 auto;
+    }
+}
+
+@media (min-width: 992px) and (max-width: 1920px) {
+    .services-scroll .scroll-item {
+        border-radius: 25px;
+    }
+    .scroll-item{
+        border-radius: 25px;
     }
 }
 .scroll-item {
