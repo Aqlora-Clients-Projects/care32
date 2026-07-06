@@ -1,3 +1,13 @@
 [build]
-  publish = "public"
-  command = ""
+  publish = "dist"
+  command = "php -S 127.0.0.1:8099 -t public >/tmp/care32-static-export.log 2>&1 & server_pid=$!; php scripts/export-static.php; status=$?; kill $server_pid; exit $status"
+
+[[redirects]]
+  from = "/home"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
