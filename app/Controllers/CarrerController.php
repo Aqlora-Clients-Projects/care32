@@ -93,15 +93,15 @@ class CarrerController extends BaseController
 
             try {
                 $mail->isSMTP();
-                $mail->Host       = 'smtp.gmail.com';
+                $mail->Host       = getenv('SMTP_HOST') ?: 'smtp.gmail.com';
                 $mail->SMTPAuth   = true;
-                $mail->Username   = 'info@care32.com';
-                $mail->Password   = 'vmod jenx itiz msbt';
+                $mail->Username   = getenv('SMTP_USERNAME') ?: '';
+                $mail->Password   = getenv('SMTP_PASSWORD') ?: '';
                 $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
                 $mail->Port       = 587;
 
                 $mail->setFrom($email, 'Job Application - NSR School');
-                $mail->addAddress('kas242024d@gmail.com');
+                $mail->addAddress(getenv('CAREER_RECIPIENT') ?: 'info@care32.com');
 
                 $mail->isHTML(true);
                 $mail->Subject = 'New Job Application from Care32 Website';
